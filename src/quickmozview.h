@@ -47,6 +47,7 @@ private:
 
 public Q_SLOTS:
     Q_MOZ_VIEW_PUBLIC_SLOTS
+    void onShutdownStarted();
 
 Q_SIGNALS:
     void childChanged();

@@ -25,5 +25,6 @@ void GeckoWorker::quit()
 {
     printf("Call EmbedLiteApp::StopChildThread()\n");
     mApp->StopChildThread();
+    printf("Called EmbedLiteApp::StopChildThread()\n");
     deleteLater();
 }

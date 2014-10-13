@@ -84,11 +84,13 @@ QuickMozView::QuickMozView(QQuickItem *parent)
 
 QuickMozView::~QuickMozView()
 {
+    qDebug() << "*";
     QMutexLocker locker(&mRenderMutex);
 
     if (d->mView) {
         d->mView->SetListener(NULL);
-        d->mContext->GetApp()->DestroyView(d->mView);
+        // TODO: fix this
+        // d->mContext->GetApp()->DestroyView(d->mView);
     }
     delete d;
     d = 0;
@@ -112,7 +114,7 @@ void
 QuickMozView::contextInitialized()
 {
     LOGT("QuickMozView");
-    d->mContext->setCompositorInSeparateThread(true);
+    qDebug() << "*";
     // We really don't care about SW rendering on Qt5 anymore
     d->mContext->GetApp()->SetIsAccelerated(true);
     createView();
@@ -120,6 +122,7 @@ QuickMozView::contextInitialized()
 
 void QuickMozView::processViewInitialization()
 {
+    qDebug() << "*";
     // This is connected to view initialization. View must be initialized
     // over here.
     Q_ASSERT(d->mViewInitialized);
@@ -241,9 +244,17 @@ void QuickMozView::clearThreadRenderObject()
 void QuickMozView::createView()
 {
     if (!d->mView) {
-        d->mView = d->mContext->GetApp()->CreateView(mParentID);
+        d->mView = d->mContext->GetApp()->CreateView();
         d->mView->SetListener(d);
+        qDebug() << "*";
+        connect(d->mContext, SIGNAL(shutdownStarted()), this, SLOT(onShutdownStarted()));
     }
+}
+
+void QuickMozView::onShutdownStarted()
+{
+    qDebug() << "*";
+    d->mView->DeleteProtocol();
 }
 
 QSGNode*
@@ -276,7 +287,7 @@ void QuickMozView::refreshNodeTexture()
     if (!d->mViewInitialized || !mActive)
         return;
 
-    if (d && d->mView)
+    if (d && d->mView && d->mView->IsValid())
     {
         int width = 0, height = 0;
         static QOpenGLExtension_OES_EGL_image* extension = nullptr;

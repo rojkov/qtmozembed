@@ -324,6 +324,7 @@ void QGraphicsMozViewPrivate::OnWindowCloseRequested()
 // View finally destroyed and deleted
 void QGraphicsMozViewPrivate::ViewDestroyed()
 {
+  qDebug() << "*";
     LOGT();
     mView = NULL;
     mViewInitialized = false;

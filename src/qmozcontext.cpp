@@ -87,6 +87,7 @@ public:
     }
     // App Initialized and ready to API call
     virtual void Initialized() {
+      qDebug() << "*";
         mInitialized = true;
 #if defined(GL_PROVIDER_EGL) || defined(GL_PROVIDER_GLX)
         if (mApp->GetRenderType() == EmbedLiteApp::RENDER_AUTO) {
@@ -105,10 +106,14 @@ public:
     }
     // App Destroyed, and ready to delete and program exit
     virtual void Destroyed() {
+      qDebug() << "*";
         LOGT("");
         if (mAsyncContext) {
             mQtPump->deleteLater();
         }
+      qDebug() << "*";
+        qApp->quit();
+      qDebug() << "*";
     }
     virtual void OnObserve(const char* aTopic, const char16_t* aData) {
         // LOGT("aTopic: %s, data: %s", aTopic, NS_ConvertUTF16toUTF8(aData).get());
@@ -183,11 +188,6 @@ QMozContext::QMozContext(QObject* parent)
     protectSingleton = this;
 }
 
-void QMozContext::setCompositorInSeparateThread(bool aEnabled)
-{
-    d->mApp->SetCompositorInSeparateThread(true);
-}
-
 mozilla::embedlite::EmbedLiteRenderTarget*
 QMozContext::createEmbedLiteRenderTarget(void* aContext, void* aSurface)
 {
@@ -201,6 +201,7 @@ void QMozContext::setProfile(const QString profilePath)
 
 QMozContext::~QMozContext()
 {
+  qDebug() << "*";
     protectSingleton = nullptr;
     if (d->mApp) {
         d->mApp->SetListener(NULL);
@@ -253,11 +254,9 @@ void QMozContext::addObservers(const QStringList& aObserversList)
     if (!d->mApp)
         return;
 
-    nsTArray<nsCString> observersList;
-    for (int i = 0; i < aObserversList.size(); i++) {
-        observersList.AppendElement(aObserversList.at(i).toUtf8().data());
+    Q_FOREACH(const QString &str, aObserversList) {
+      d->mApp->AddObserver(str.toUtf8().data());
     }
-    d->mApp->AddObservers(observersList);
 }
 
 QMozContext*
@@ -309,6 +308,8 @@ float QMozContext::pixelRatio() const
 
 void QMozContext::stopEmbedding()
 {
+    Q_EMIT shutdownStarted();
+    qDebug() << "emitted shutdownStarted signal";
     GetApp()->Stop();
 }
 
