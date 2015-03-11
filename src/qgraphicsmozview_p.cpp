@@ -289,6 +289,11 @@ void QGraphicsMozViewPrivate::OnLocationChanged(const char* aLocation, bool aCan
         mLocation = QString(aLocation);
         mViewIface->urlChanged();
     }
+
+    // Forward OnLocationChanged unconditionally further to UI. This might be used
+    // to catch the moment when WebView's session history can be overridden with
+    // entries loaded from a local DB.
+    mViewIface->locationChanged();
 }
 
 void QGraphicsMozViewPrivate::OnLoadProgress(int32_t aProgress, int32_t aCurTotal, int32_t aMaxTotal)

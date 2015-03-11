@@ -129,6 +129,7 @@ Q_DECLARE_METATYPE(QMozReturnValue) \
     void titleChanged(); \
     void loadProgressChanged(); \
     void navigationHistoryChanged(); \
+    void locationChanged(); \
     void loadingChanged(); \
     void viewDestroyed(); \
     void windowCloseRequested(); \

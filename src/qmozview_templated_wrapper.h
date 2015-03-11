@@ -27,6 +27,7 @@ public:
     virtual void titleChanged() = 0;
     virtual void loadProgressChanged() = 0;
     virtual void navigationHistoryChanged() = 0;
+    virtual void locationChanged() = 0;
     virtual void loadingChanged() = 0;
     virtual void viewDestroyed() = 0;
     virtual void windowCloseRequested() = 0;
@@ -98,6 +99,10 @@ public:
     void navigationHistoryChanged()
     {
         Q_EMIT view.navigationHistoryChanged();
+    }
+    void locationChanged()
+    {
+        Q_EMIT view.locationChanged();
     }
     void loadingChanged()
     {
