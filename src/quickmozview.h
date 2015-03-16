@@ -8,6 +8,8 @@
 
 #include <QMatrix>
 #include <QtQuick/QQuickItem>
+#include <QWindow>
+#include <QPointer>
 #include <QtGui/QOpenGLShaderProgram>
 #include "qmozview_defined_wrapper.h"
 
@@ -37,6 +39,8 @@ public:
 
     bool active() const;
     void setActive(bool active);
+    virtual void geometryChanged(const QRectF & newGeometry, const QRectF & oldGeometry);
+    QPointer<QWindow> m_window;
 
 private:
     QObject* getChild() { return this; }
@@ -64,7 +68,6 @@ private Q_SLOTS:
 // INTERNAL
 protected:
     void itemChange(ItemChange change, const ItemChangeData &);
-    virtual void geometryChanged(const QRectF & newGeometry, const QRectF & oldGeometry);
     virtual QSGNode* updatePaintNode(QSGNode* node, UpdatePaintNodeData* data);
     virtual void mouseMoveEvent(QMouseEvent* event);
     virtual void mousePressEvent(QMouseEvent* event);

@@ -36,6 +36,8 @@
 #include "qmozviewsgnode.h"
 #endif
 
+#define LOG_COMPONENT "QuickMozView"
+
 using namespace mozilla;
 using namespace mozilla::embedlite;
 
@@ -65,7 +67,7 @@ QuickMozView::QuickMozView(QQuickItem *parent)
         Initialized = true;
     }
 
-    setFlag(ItemHasContents, true);
+    setFlag(ItemHasContents, false);
 
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
     setFlag(ItemClipsChildrenToShape, true);
@@ -164,6 +166,7 @@ void QuickMozView::updateGLContextInfo(QOpenGLContext* ctx)
         return;
     }
     d->mGLSurfaceSize = ctx->surface()->size();
+    qDebug() << "new mGLSurfaceSize" << d->mGLSurfaceSize;
 }
 
 /**
@@ -172,11 +175,12 @@ void QuickMozView::updateGLContextInfo(QOpenGLContext* ctx)
  */
 void QuickMozView::updateGLContextInfo()
 {
-    if (window()) {
-        Qt::ScreenOrientation orientation = window()->contentOrientation();
+    QWindow *win = window() ? window() : m_window.data();
+    if (win) {
+        Qt::ScreenOrientation orientation = win->contentOrientation();
         QSize viewPortSize;
-        int minValue = qMin(window()->width(), window()->height());
-        int maxValue = qMax(window()->width(), window()->height());
+        int minValue = qMin(win->width(), win->height());
+        int maxValue = qMax(win->width(), win->height());
 
         switch (orientation) {
         case Qt::LandscapeOrientation:
@@ -193,6 +197,7 @@ void QuickMozView::updateGLContextInfo()
         }
 
         d->mGLSurfaceSize = viewPortSize;
+        qDebug() << "new mGLSurfaceSize" << d->mGLSurfaceSize;
     }
 }
 
