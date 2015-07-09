@@ -74,9 +74,9 @@ Q_DECLARE_METATYPE(QMozReturnValue) \
     Q_PROPERTY(qreal chromeGestureThreshold READ chromeGestureThreshold WRITE setChromeGestureThreshold NOTIFY chromeGestureThresholdChanged FINAL)
 
 #define Q_MOZ_VIEW_PUBLIC_METHODS \
-    QUrl url() const; \
+    virtual QUrl url() const; \
     void setUrl(const QUrl&); \
-    QString title() const; \
+    virtual QString title() const; \
     int loadProgress() const; \
     bool canGoBack() const; \
     bool canGoForward() const; \
